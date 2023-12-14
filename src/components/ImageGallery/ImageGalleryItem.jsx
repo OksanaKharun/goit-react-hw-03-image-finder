@@ -17,3 +17,5 @@ const ImageGalleryItem = ({ image, openModal }) => {
 
 
 export default ImageGalleryItem;
+
+

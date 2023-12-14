@@ -18,8 +18,6 @@ class App extends Component {
     };
   }
 
-
-
   handleSearchSubmit = (searchQuery) => {
     this.setState({
       query: searchQuery,

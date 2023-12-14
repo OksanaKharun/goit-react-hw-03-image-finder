@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 
-
 const Searchbar = ({ onSubmit }) => {
   const [query, setQuery] = useState('');
 
