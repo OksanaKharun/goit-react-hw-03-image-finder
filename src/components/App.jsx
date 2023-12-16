@@ -2,20 +2,24 @@ import React, { Component } from 'react';
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button';
-import Modal from './Modal';
+import  Modal   from './Modal';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      query: '',
-      images: [],
-      currentPage: 1,
-      largeImageURL: '',
-      showModal: false,
-      hasMoreImages: true,
-      loading: false,
-    };
+   state = {
+    query: '',
+    images: [],
+    isLoading: false,
+    showModal: false,
+    selectedImage: null,
+    page: 1,
+    perPage: 12,
+    hasMoreImages: true,
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.query !== this.state.query) {
+      this.fetchImages();
+    }
   }
 
   handleSearchSubmit = (searchQuery) => {
@@ -84,7 +88,7 @@ render() {
       <ImageGallery images={images} openModal={this.openModal} />
       {loading && <p>Loading...</p>}
        {shouldRenderLoadMore && !loading && <Button onLoadMore={this.handleLoadMore} hasMoreImages={hasMoreImages} />}
-      {showModal && <Modal largeImageURL={largeImageURL} onClose={this.closeModal} />}
+      {showModal && <Modal image={largeImageURL}  onClose={this.closeModal} />}
     </div>
   );
 }
