@@ -22,38 +22,37 @@ class App extends Component {
     }
   }
 
-  handleSearchSubmit = (searchQuery) => {
-    this.setState({
-      query: searchQuery,
-      images: [],
-      currentPage: 1,
-      hasMoreImages: true,
-    }, () => this.fetchImages(searchQuery, 1));
-  };
+  handleSearchSubmit = (query) => {
+      this.setState({ query, images: [], page: 1, hasMoreImages: true })
+    };
 
-fetchImages = (searchQuery, page) => {
-  this.setState({ loading: true });
 
-  const apiKey = '40210238-72924526e0480010730b712b1';
-  const perPage = 12;
-  const apiUrl = `https://pixabay.com/api/?q=${searchQuery}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=${perPage}`;
+ fetchImages = () => {
+      const { query, page, perPage } = this.state;
+      const API_KEY = '40210238-72924526e0480010730b712b1';
+      const API_URL = `https://pixabay.com/api/?key=${API_KEY}&q=${query}&page=${page}&per_page=${perPage}`;
 
-  fetch(apiUrl)
-    .then((response) => response.json())
-    .then((data) => {
-      const { hits, totalHits } = data;
+      this.setState({ isLoading: true });
 
-      this.setState((prevState) => ({
-        images: [...prevState.images, ...hits],
-        currentPage: prevState.currentPage + 1,
-        hasMoreImages: prevState.currentPage < Math.ceil(totalHits / perPage),
-      }));
-    })
-    .catch((error) => console.error('Error fetching images:', error))
-    .finally(() => {
-      this.setState({ loading: false });
-    });
-};
+      fetch(API_URL)
+        .then((response) => response.json())
+        .then((data) => {
+          const receivedImages = data.hits || [];
+          if (receivedImages.length < perPage) {
+            this.setState({ hasMoreImages: false });
+          }
+          this.setState((prevState) => ({
+            images: [...prevState.images, ...receivedImages],
+            isLoading: false,
+            page: prevState.page + 1,
+          }));
+        })
+        .catch((error) => {
+          console.error('Error fetching images:'.error);
+          this.setState({ isLoading: false });
+        })
+    };
+
 
 handleLoadMore = () => {
   const { loading, hasMoreImages, query, currentPage } = this.state;
